@@ -52,6 +52,7 @@ class ProfileActivity : AppCompatActivity() {
         ivProfileImage = findViewById(R.id.ivProfileImage)
 
         loadProfileData()
+        fetchLatestProfileFromServer()
 
         val btnBack: ImageButton = findViewById(R.id.btnBack)
         btnBack.setOnClickListener {
@@ -101,15 +102,27 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        fetchLatestProfileFromServer()
+    }
+
     private fun loadProfileData() {
         isImageChanged = false
         val sharedPref = getSharedPreferences("UserProfile", Activity.MODE_PRIVATE)
-        etName.setText(sharedPref.getString("name", "John Doe"))
-        tvEmail.text = sharedPref.getString("email", "cxribiosapp@gmail.com")
-        etAge.setText(sharedPref.getString("age", "22"))
-        etMobile.setText(sharedPref.getString("mobile", "9234567889"))
-        etGender.setText(sharedPref.getString("gender", "Male"))
-        etLocation.setText(sharedPref.getString("location", "Chennai"))
+        val name = sharedPref.getString("name", "") ?: ""
+        val email = sharedPref.getString("email", "") ?: ""
+        val age = sharedPref.getString("age", "") ?: ""
+        val mobile = sharedPref.getString("mobile", "") ?: ""
+        val gender = sharedPref.getString("gender", "") ?: ""
+        val location = sharedPref.getString("location", "") ?: ""
+
+        etName.setText(if (name.isNotBlank()) name else "Doctor")
+        tvEmail.text = if (email.isNotBlank()) email else "doctor@gmail.com"
+        etAge.setText(age)
+        etMobile.setText(mobile)
+        etGender.setText(gender)
+        etLocation.setText(location)
         
         val localFile = java.io.File(filesDir, "profile_image.jpg")
         if (localFile.exists()) {
@@ -125,24 +138,7 @@ class ProfileActivity : AppCompatActivity() {
                 try {
                     selectedImageUri = Uri.parse(uriString)
                     Glide.with(this)
-                        .asBitmap()
                         .load(selectedImageUri)
-                        .listener(object : com.bumptech.glide.request.RequestListener<android.graphics.Bitmap> {
-                            override fun onLoadFailed(e: com.bumptech.glide.load.engine.GlideException?, model: Any?, target: com.bumptech.glide.request.target.Target<android.graphics.Bitmap>, isFirstResource: Boolean): Boolean {
-                                return false
-                            }
-                            override fun onResourceReady(resource: android.graphics.Bitmap, model: Any, target: com.bumptech.glide.request.target.Target<android.graphics.Bitmap>, dataSource: com.bumptech.glide.load.DataSource, isFirstResource: Boolean): Boolean {
-                                try {
-                                    val destFile = java.io.File(filesDir, "profile_image.jpg")
-                                    val fos = java.io.FileOutputStream(destFile)
-                                    resource.compress(android.graphics.Bitmap.CompressFormat.JPEG, 90, fos)
-                                    fos.close()
-                                } catch (e: Exception) {
-                                    e.printStackTrace()
-                                }
-                                return false
-                            }
-                        })
                         .placeholder(R.drawable.ic_person)
                         .error(R.drawable.ic_person)
                         .into(ivProfileImage)
@@ -154,6 +150,58 @@ class ProfileActivity : AppCompatActivity() {
                 ivProfileImage.setImageResource(R.drawable.ic_person)
             }
         }
+    }
+
+    private fun fetchLatestProfileFromServer() {
+        val sharedPref = getSharedPreferences("UserProfile", Activity.MODE_PRIVATE)
+        val userId = sharedPref.getInt("user_id", -1)
+        if (userId <= 0) return
+
+        com.simats.CerviScan.network.RetrofitClient.instance.getProfile(userId)
+            .enqueue(object : retrofit2.Callback<com.simats.CerviScan.network.LoginResponse> {
+                override fun onResponse(
+                    call: retrofit2.Call<com.simats.CerviScan.network.LoginResponse>,
+                    response: retrofit2.Response<com.simats.CerviScan.network.LoginResponse>
+                ) {
+                    if (response.isSuccessful && response.body()?.status == "success") {
+                        val profile = response.body() ?: return
+                        
+                        // Update UI if not actively editing
+                        if (!isEditing) {
+                            profile.name?.let { if (it.isNotBlank()) etName.setText(it) }
+                            profile.email?.let { if (it.isNotBlank()) tvEmail.text = it }
+                            profile.age?.let { etAge.setText(it) }
+                            profile.mobile?.let { etMobile.setText(it) }
+                            profile.gender?.let { etGender.setText(it) }
+                            profile.location?.let { etLocation.setText(it) }
+
+                            if (!profile.profileImage.isNullOrBlank()) {
+                                Glide.with(this@ProfileActivity)
+                                    .load(profile.profileImage)
+                                    .placeholder(R.drawable.ic_person)
+                                    .error(R.drawable.ic_person)
+                                    .into(ivProfileImage)
+                            }
+                        }
+
+                        // Persist to SharedPreferences
+                        with(sharedPref.edit()) {
+                            profile.name?.let { putString("name", it) }
+                            profile.email?.let { putString("email", it) }
+                            profile.age?.let { putString("age", it) }
+                            profile.mobile?.let { putString("mobile", it) }
+                            profile.gender?.let { putString("gender", it) }
+                            profile.location?.let { putString("location", it) }
+                            profile.profileImage?.let { putString("profileImage", it) }
+                            apply()
+                        }
+                    }
+                }
+
+                override fun onFailure(call: retrofit2.Call<com.simats.CerviScan.network.LoginResponse>, t: Throwable) {
+                    // Ignore background sync errors, fallback to local cache
+                }
+            })
     }
 
     private fun saveProfileData() {

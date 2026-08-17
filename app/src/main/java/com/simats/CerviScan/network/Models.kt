@@ -24,7 +24,11 @@ data class LoginResponse(
 data class SignupRequest(
     val name: String,
     val email: String,
-    val password: String
+    val password: String,
+    val mobile: String? = null,
+    val age: String? = null,
+    val gender: String? = null,
+    val location: String? = null
 )
 
 data class SimpleResponse(

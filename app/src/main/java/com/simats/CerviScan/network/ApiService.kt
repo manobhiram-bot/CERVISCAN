@@ -29,6 +29,9 @@ interface ApiService {
     @GET("get_scan_history.php")
     fun getScanHistory(@Query("user_id") userId: Int): Call<ScanHistoryResponse>
 
+    @GET("get_profile.php")
+    fun getProfile(@Query("user_id") userId: Int): Call<LoginResponse>
+
     @POST("update_profile.php")
     fun updateProfile(@Body request: ProfileUpdateRequest): Call<SimpleResponse>
 

@@ -12,6 +12,7 @@ $password = trim($data["password"] ?? "");
 $mobile   = trim($data["mobile"] ?? "");
 $age      = trim($data["age"] ?? "");
 $gender   = trim($data["gender"] ?? "");
+$location = trim($data["location"] ?? "");
 
 if ($name === "" || !filter_var($email, FILTER_VALIDATE_EMAIL) || $password === "" || substr(strtolower($email), -10) !== "@gmail.com") {
     ob_clean();
@@ -28,6 +29,7 @@ $stmt->execute();
 $stmt->store_result();
 
 if ($stmt->num_rows > 0) {
+    $stmt->close();
     ob_clean();
     echo json_encode([
         "status" => "error",
@@ -35,24 +37,30 @@ if ($stmt->num_rows > 0) {
     ]);
     exit;
 }
+$stmt->close();
 
 $stmt = $conn->prepare(
-    "INSERT INTO users (name, email, password, mobile, age, gender)
-     VALUES (?, ?, ?, ?, ?, ?)"
+    "INSERT INTO users (name, email, password, mobile, age, gender, location)
+     VALUES (?, ?, ?, ?, ?, ?, ?)"
 );
-$stmt->bind_param("ssssss", $name, $email, $password, $mobile, $age, $gender);
+$stmt->bind_param("sssssss", $name, $email, $password, $mobile, $age, $gender, $location);
 
 if ($stmt->execute()) {
+    $user_id = $stmt->insert_id;
+    $stmt->close();
     ob_clean();
     echo json_encode([
-        "status"  => "success",
-        "user_id" => $stmt->insert_id
+        "status"   => "success",
+        "user_id"  => $user_id,
+        "message"  => "User registered successfully"
     ]);
 } else {
+    $err = $stmt->error;
+    $stmt->close();
     ob_clean();
     echo json_encode([
         "status" => "error",
-        "message" => "Registration failed: " . $stmt->error
+        "message" => "Registration failed: " . $err
     ]);
 }
 exit;
