@@ -108,21 +108,21 @@ try {
     $mail = new PHPMailer(true);
 
     $mail->isSMTP();
-    $mail->Timeout = 5; // Fast timeout for dev on blocked networks
-    $mail->Host = "smtp.gmail.com";
+    $mail->Timeout = 30; // 30s timeout for reliable Google SMTP handshake
+    $mail->Host = SMTP_SERVER;
     $mail->SMTPAuth = true;
 
     $mail->Username = SMTP_EMAIL;
     $mail->Password = SMTP_PASS;
 
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-    $mail->Port = 587;
+    $mail->Port = SMTP_PORT;
 
-    $mail->setFrom(SMTP_EMAIL, "CXRib");
+    $mail->setFrom(SMTP_EMAIL, "CerviScan Diagnostic Suite");
     $mail->addAddress($email);
 
     $mail->isHTML(true);
-    $mail->Subject = "CXRib OTP Verification";
+    $mail->Subject = "CerviScan OTP Verification Code";
 
 $mail->Body = '
 <!DOCTYPE html>
