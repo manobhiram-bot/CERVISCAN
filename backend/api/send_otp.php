@@ -29,33 +29,16 @@ $data = json_decode($raw, true);
 $email = trim($data["email"] ?? "");
 
 // --------------------------------------------------
-// VALIDATE EMAIL & CHECK USER REGISTRATION
+// VALIDATE EMAIL FORMAT
 // --------------------------------------------------
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     ob_clean();
     echo json_encode([
         "status" => "error",
-        "message" => "Invalid email"
+        "message" => "Please enter a valid email address"
     ]);
     exit;
 }
-
-$stmt_check = $conn->prepare("SELECT id FROM users WHERE LOWER(email) = ? LIMIT 1");
-$email_lower = strtolower($email);
-$stmt_check->bind_param("s", $email_lower);
-$stmt_check->execute();
-$stmt_check->store_result();
-
-if ($stmt_check->num_rows === 0) {
-    $stmt_check->close();
-    ob_clean();
-    echo json_encode([
-        "status" => "error",
-        "message" => "Email is not registered"
-    ]);
-    exit;
-}
-$stmt_check->close();
 
 // --------------------------------------------------
 // GENERATE OTP
