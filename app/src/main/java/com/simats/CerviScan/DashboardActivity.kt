@@ -80,8 +80,10 @@ class DashboardActivity : AppCompatActivity() {
         val sharedPref = getSharedPreferences("UserProfile", Activity.MODE_PRIVATE)
         val tvUserName: TextView = findViewById(R.id.tvUserName)
         val ivProfileThumb: ImageView = findViewById(R.id.ivProfileThumb)
+        val userId = sharedPref.getInt("user_id", -1)
 
-        tvUserName.text = sharedPref.getString("name", "John Doe")
+        val name = sharedPref.getString("name", "") ?: ""
+        tvUserName.text = name
         
         val localFile = java.io.File(filesDir, "profile_image.jpg")
         if (localFile.exists()) {
@@ -95,24 +97,7 @@ class DashboardActivity : AppCompatActivity() {
             if (!uriString.isNullOrEmpty()) {
                 try {
                     Glide.with(this)
-                        .asBitmap()
                         .load(Uri.parse(uriString))
-                        .listener(object : com.bumptech.glide.request.RequestListener<android.graphics.Bitmap> {
-                            override fun onLoadFailed(e: com.bumptech.glide.load.engine.GlideException?, model: Any?, target: com.bumptech.glide.request.target.Target<android.graphics.Bitmap>, isFirstResource: Boolean): Boolean {
-                                return false
-                            }
-                            override fun onResourceReady(resource: android.graphics.Bitmap, model: Any, target: com.bumptech.glide.request.target.Target<android.graphics.Bitmap>, dataSource: com.bumptech.glide.load.DataSource, isFirstResource: Boolean): Boolean {
-                                try {
-                                    val destFile = java.io.File(filesDir, "profile_image.jpg")
-                                    val fos = java.io.FileOutputStream(destFile)
-                                    resource.compress(android.graphics.Bitmap.CompressFormat.JPEG, 90, fos)
-                                    fos.close()
-                                } catch (e: Exception) {
-                                    e.printStackTrace()
-                                }
-                                return false
-                            }
-                        })
                         .placeholder(R.drawable.ic_person)
                         .error(R.drawable.ic_person)
                         .into(ivProfileThumb)
@@ -124,8 +109,35 @@ class DashboardActivity : AppCompatActivity() {
                 ivProfileThumb.setImageResource(R.drawable.ic_person)
             }
         }
-    }
 
+        // Live cloud sync
+        if (userId > 0) {
+            com.simats.CerviScan.network.RetrofitClient.instance.getProfile(userId)
+                .enqueue(object : retrofit2.Callback<com.simats.CerviScan.network.LoginResponse> {
+                    override fun onResponse(
+                        call: retrofit2.Call<com.simats.CerviScan.network.LoginResponse>,
+                        response: retrofit2.Response<com.simats.CerviScan.network.LoginResponse>
+                    ) {
+                        if (response.isSuccessful && response.body()?.status == "success") {
+                            val profile = response.body() ?: return
+                            profile.name?.let {
+                                tvUserName.text = it
+                                sharedPref.edit().putString("name", it).apply()
+                            }
+                            if (!profile.profileImage.isNullOrBlank()) {
+                                sharedPref.edit().putString("profileImage", profile.profileImage).apply()
+                                Glide.with(this@DashboardActivity)
+                                    .load(profile.profileImage)
+                                    .placeholder(R.drawable.ic_person)
+                                    .error(R.drawable.ic_person)
+                                    .into(ivProfileThumb)
+                            }
+                        }
+                    }
+                    override fun onFailure(call: retrofit2.Call<com.simats.CerviScan.network.LoginResponse>, t: Throwable) {}
+                })
+        }
+    }
 
     override fun onResume() {
         super.onResume()
