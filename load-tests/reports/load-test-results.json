@@ -1,0 +1,106 @@
+[
+  {
+    "scenario": "Database Ping API (GET /test_db.php)",
+    "totalRequests": 76311,
+    "durationSec": 60.04,
+    "rps": 1270.92,
+    "min": 4.59,
+    "avg": 78.54,
+    "max": 1065.35,
+    "p50": 75.62,
+    "p90": 109.67,
+    "p95": 122.57,
+    "p99": 150.84,
+    "errors": 0,
+    "errorRate": "0.00%",
+    "statusCodes": {
+      "200": 76311
+    },
+    "bytesReceived": 33230937,
+    "mbReceived": "31.69 MB"
+  },
+  {
+    "scenario": "Doctor Login Authentication (POST /login.php)",
+    "totalRequests": 44077,
+    "durationSec": 60.29,
+    "rps": 731.03,
+    "min": 5.41,
+    "avg": 136.23,
+    "max": 1081.96,
+    "p50": 134.39,
+    "p90": 164.68,
+    "p95": 183.48,
+    "p99": 256.7,
+    "errors": 11955,
+    "errorRate": "27.12%",
+    "statusCodes": {
+      "200": 32122,
+      "ERR": 11955
+    },
+    "bytesReceived": 16720115,
+    "mbReceived": "15.95 MB"
+  },
+  {
+    "scenario": "Patient Scan History Retrieval (GET /get_scan_history.php)",
+    "totalRequests": 46561,
+    "durationSec": 60.01,
+    "rps": 775.9,
+    "min": 3.77,
+    "avg": 128.8,
+    "max": 1638.26,
+    "p50": 127.96,
+    "p90": 166.37,
+    "p95": 191.29,
+    "p99": 448.22,
+    "errors": 8649,
+    "errorRate": "18.58%",
+    "statusCodes": {
+      "200": 37912,
+      "ERR": 8649
+    },
+    "bytesReceived": 42267856,
+    "mbReceived": "40.31 MB"
+  },
+  {
+    "scenario": "Flask AI Service Health (GET /health)",
+    "totalRequests": 18854,
+    "durationSec": 60.51,
+    "rps": 311.6,
+    "min": 4.47,
+    "avg": 319.46,
+    "max": 1356.38,
+    "p50": 344.3,
+    "p90": 498.21,
+    "p95": 537.98,
+    "p99": 690.02,
+    "errors": 4128,
+    "errorRate": "21.89%",
+    "statusCodes": {
+      "200": 14726,
+      "ERR": 4128
+    },
+    "bytesReceived": 559588,
+    "mbReceived": "0.53 MB"
+  },
+  {
+    "scenario": "Mixed Production Workload (All Endpoints Combined)",
+    "totalRequests": 37316,
+    "durationSec": 60.03,
+    "rps": 621.65,
+    "min": 2.34,
+    "avg": 160.75,
+    "max": 805.63,
+    "p50": 129.4,
+    "p90": 585.02,
+    "p95": 639.61,
+    "p99": 722.56,
+    "errors": 7509,
+    "errorRate": "20.12%",
+    "statusCodes": {
+      "200": 29807,
+      "ERR": 7509
+    },
+    "bytesReceived": 15671074,
+    "mbReceived": "14.95 MB"
+  }
+]

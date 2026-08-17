@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary Brand Colors -->
+    <color name="primary">#6200EE</color>
+    <color name="primary_variant">#3700B3</color>
+    <color name="secondary">#03DAC6</color>
+    <color name="accent_gold">#FFD700</color>
+    
+    <!-- Gradient Colors -->
+    <color name="grad_start">#1A237E</color>
+    <color name="grad_end">#121212</color>
+    
+    <!-- Status Colors -->
+    <color name="success">#4CAF50</color>
+    <color name="error">#FF5252</color>
+    <color name="warning">#FFC107</color>
+    <color name="info">#2196F3</color>
+
+    <!-- Neutral Colors -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="glass_white">#1AFFFFFF</color>
+    <color name="glass_white_heavy">#4DFFFFFF</color>
+    <color name="text_hint">#B3FFFFFF</color>
+    <color name="text_dim">#80FFFFFF</color>
+</resources>

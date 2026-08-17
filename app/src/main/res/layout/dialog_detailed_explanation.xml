@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_bottom_sheet_dark"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <!-- Drag Handle -->
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="16dp"
+        android:background="#40FFFFFF" />
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/tvExplanationTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:text="Diagnostic Details" />
+
+    <!-- Subtitle (Category) -->
+    <TextView
+        android:id="@+id/tvExplanationCategory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textColor="#FFD700"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:text="Category Name" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="320dp"
+        android:layout_marginTop="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Section 1: Overview -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#FFD700"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:text="1. DIAGNOSTIC OVERVIEW" />
+
+            <TextView
+                android:id="@+id/tvOverviewText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="20dp"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:lineSpacingMultiplier="1.25"
+                android:text="Overview text" />
+
+            <!-- Section 2: Clinical Implications -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#FFD700"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:text="2. CLINICAL IMPLICATIONS" />
+
+            <TextView
+                android:id="@+id/tvImplicationsText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="20dp"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:lineSpacingMultiplier="1.25"
+                android:text="Implications text" />
+
+            <!-- Section 3: Recommendations -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#FFD700"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:text="3. MEDICAL RECOMMENDATIONS" />
+
+            <TextView
+                android:id="@+id/tvRecommendationsText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:lineSpacingMultiplier="1.25"
+                android:text="Recommendations text" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Close Button -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnCloseExplanation"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bg_button_white"
+        android:text="Close"
+        android:textColor="#333333"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+</LinearLayout>

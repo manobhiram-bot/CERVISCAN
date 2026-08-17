@@ -1,0 +1,26 @@
+{
+  "name": "selenium-tests",
+  "version": "1.0.0",
+  "description": "CerviScan Web Frontend End-to-End Selenium Automated Test Suite",
+  "main": "tests/login-tests.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "node tests/login-tests.js",
+    "generate-report": "node generate-excel.js"
+  },
+  "keywords": [
+    "selenium",
+    "e2e",
+    "cerviscan",
+    "testing",
+    "excel-reports"
+  ],
+  "author": "CerviScan QA Team",
+  "license": "ISC",
+  "dependencies": {
+    "exceljs": "^4.4.0",
+    "selenium-webdriver": "^4.41.0"
+  }
+}
